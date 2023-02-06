@@ -48,7 +48,7 @@ final class Factory extends AbstractFactory
         );
     }
 
-    private function createPhelFunctionRepository(): PhelFunctionRepositoryInterface
+    public function createPhelFunctionRepository(): PhelFunctionRepositoryInterface
     {
         return new PhelFunctionRepository(
             $this->getPhelApiFacade(),
