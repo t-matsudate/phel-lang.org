@@ -47,7 +47,7 @@ contexts:
       scope: constant.character.escape.php
 
   paren:
-    - match: '@?\('
+    - match: '\('
       scope: punctuation.definition.group.begin.phel
       push:
         - meta_scope: meta.group.phel
@@ -59,7 +59,7 @@ contexts:
       scope: invalid.illegal.stray-bracket-end.phel
 
   bracket:
-    - match: '@?\{'
+    - match: '\{'
       scope: punctuation.definition.group.begin.phel
       push:
         - meta_scope: meta.group.phel
@@ -71,7 +71,7 @@ contexts:
       scope: invalid.illegal.stray-bracket-end.phel
 
   brace:
-    - match: '@?\['
+    - match: '\['
       scope: punctuation.definition.group.begin.phel
       push:
         - meta_scope: meta.group.phel
@@ -112,7 +112,7 @@ contexts:
       scope: constant.numeric.integer.decimal.phel
 
   corelib:
-    - match: "(?<=\\(|\\{|\\[|\\s)(defstruct|definterface|defmacro-|defmacro|defn-|defn|def-|def|recur|fn|throw|try|catch|finally|loop|ns|quote|dofor|do|if-not|if|when-not|when|apply|let|foreach|for|case|cond|list|vector|hash-map|set)(?=\\s|\\)|\\]|\\})"
+    - match: "(?<=\\(|\\{|\\[|\\s)(defstruct|definterface|defmacro-|defmacro|defn-|defn|def-|def|recur|fn|throw|try|catch|finally|loop|ns|quote|dofor|do|if-not|if|when-not|when|apply|let|foreach|for|case|cond|list|vector|hash-map|set|%|\\*|\\*\\*|\\+|-|->|->>|//|<|<=|<=>|=|>|>=|>=<|\\*compile-mode\\*|\\*ns\\*|NAN|nan\\?|all\\?|and|argv|as->|associative\\?|binding|bit-and|bit-clear|bit-flip|bit-not|bit-or|bit-set|bit-shift-left|bit-shift-right|bit-test|bit-xor|boolean\\?|case|coerce-in|comment|comp|compare|compile|complement|concat|cond|cons|contains-value\\?|contains\\?|count|dec|declare|deep-merge|def-|definterface|defmacro|defmacro-|defn|defn-|defstruct|deref|difference|difference-pair|distinct|dofor|drop|drop-while|empty\\?|eval|even\\?|extreme|false\\?|ffirst|filter|find|find-index|first|flatten|float\\?|for|format|frequencies|full-name|function\\?|gensym|get|get-in|group-by|hash-map|hash-map\\?|html//doctype|html//escape-html|html//html|html//raw-string|html//raw-string\\?|http//create-response-from-map|http//create-response-from-string|http//emit-response|http//files-from-globals|http//headers-from-server|http//request|http//request\\?|http//request-from-globals|http//request-from-globals-args|http//request-from-map|http//response|http//response\\?|http//response-from-map|http//response-from-string|http//uploaded-file|http//uploaded-file\\?|http//uri|http//uri\\?|http//uri-from-globals|http//uri-from-string|id|identity|if-not|inc|indexed\\?|int\\?|interleave|interpose|intersection|invert|json//decode|json//decode-value|json//encode|json//encode-value|json//valid-key\\?|juxt|keep|keep-indexed|keys|keyword|keyword\\?|kvs|list|list\\?|map|map-indexed|mapcat|max|mean|merge|merge-with|meta|min|name|namespace|neg\\?|next|nfirst|nil\\?|nnext|not|not=|number\\?|odd\\?|one\\?|or|pairs|partial|partition|peek|persistent|php-array-to-map|php-array\\?|php-associative-array|php-indexed-array|php-object\\?|php-resource\\?|pop|pos\\?|print|print-str|printf|println|push|put|put-in|rand|rand-int|rand-nth|range|re-seq|read-string|reduce|reduce2|remove|repeat|rest|reverse|second|set|set!|set\\?|set-meta!|shuffle|slice|some\\?|sort|sort-by|split-at|split-with|str|str-contains\\?|string\\?|struct\\?|sum|swap!|symbol\\?|symmetric-difference|take|take-last|take-nth|take-while|test//deftest|test//is|test//print-summary|test//report|test//run-tests|test//successful\\?|to-php-array|transient|tree-seq|true\\?|truthy\\?|type|union|unset|update|update-in|values|var|var\\?|vector|vector\\?|when|when-not|with-output-buffer|zero\\?|zipcoll)(?=\\s|\\)|\\]|\\})"
       scope: keyword.control.phel
     - match: "(?<=\\(|\\{|\\[|\\s)(php\\/[^\\s\\#\\(\\)\\{\\}\\[\\]\\'\\\"\\,\\`]+)(?=\\s|\\)|\\]|\\})"
       scope: keyword.other.phel
