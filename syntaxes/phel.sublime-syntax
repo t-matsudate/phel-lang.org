@@ -18,8 +18,18 @@ contexts:
     #- include: symbol
 
   comment:
-    - match: (#).*$\n?
-      scope: comment.line.hash.phel
+    # Multiline block comments: start with #| and end with |#
+    - match: '#\|'
+      scope: punctuation.definition.comment.begin.phel
+      push:
+        - meta_scope: comment.block.phel
+        - match: '\|#'
+          scope: punctuation.definition.comment.end.phel
+          pop: true
+
+    # Single-line comments: ; ... or # ... (but not "#{")
+    - match: (;|#(?!\{)).*$
+      scope: comment.line.hash-or-semicolon.phel
       captures:
         1: punctuation.definition.comment.phel
 
@@ -79,6 +89,11 @@ contexts:
           scope: punctuation.definition.group.end.phel
           pop: true
         - include: main
+        # mismatches only if still at this level
+        - match: '\)'
+          scope: invalid.illegal.mismatched-paren.phel
+        - match: '\}'
+          scope: invalid.illegal.mismatched-brace.phel
     - match: '\]'
       scope: invalid.illegal.stray-bracket-end.phel
 
@@ -112,7 +127,7 @@ contexts:
       scope: constant.numeric.integer.decimal.phel
 
   corelib:
-    - match: "(?<=\\(|\\{|\\[|\\s)(defstruct|definterface|defmacro-|defmacro|defn-|defn|def-|def|recur|fn|throw|try|catch|finally|loop|ns|quote|dofor|do|if-not|if|when-not|when|apply|let|foreach|for|case|cond|list|vector|hash-map|set)(?=\\s|\\)|\\]|\\})"
+    - match: "(?<=\\(|\\{|\\[|\\s)(defstruct|definterface|defmacro-|defmacro|defn-|defn|def-|def|recur|fn|throw|try|catch|finally|loop|ns|quote|dofor|do|if-not|if|when-not|when|apply|let|foreach|for|case|cond|list|vector|hash-map|set|println)(?=\\s|\\)|\\]|\\})"
       scope: keyword.control.phel
     - match: "(?<=\\(|\\{|\\[|\\s)(php\\/[^\\s\\#\\(\\)\\{\\}\\[\\]\\'\\\"\\,\\`]+)(?=\\s|\\)|\\]|\\})"
       scope: keyword.other.phel

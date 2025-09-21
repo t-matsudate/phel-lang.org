@@ -2,6 +2,7 @@ const MAX_ITEMS = 10;
 const UP_ARROW = "ArrowUp";
 const DOWN_ARROW = "ArrowDown";
 const ENTER_KEY = "Enter";
+const ESCAPE_KEY = "Escape";
 
 const searchInput = document.getElementById("search");
 const searchResults = document.getElementById("search-results");
@@ -20,14 +21,34 @@ document.addEventListener("keyup", function (keyboardEvent) {
 });
 
 document.addEventListener("keydown", function (keyboardEvent) {
-    const len = searchResultsItems.getElementsByTagName("li").length - 1;
+    const items = searchResultsItems.getElementsByTagName("li");
+    const len = items.length - 1;
 
-    if (keyboardEvent.key === DOWN_ARROW) {
-        downArrow(len);
-    } else if (keyboardEvent.key === UP_ARROW) {
-        upArrow(len);
-    } else if (keyboardEvent.key === ENTER_KEY) {
-        searchItemSelected.getElementsByTagName("a")[0].click();
+    switch (keyboardEvent.key) {
+        case DOWN_ARROW:
+            keyboardEvent.preventDefault();
+            downArrow(len);
+            break;
+
+        case UP_ARROW:
+            keyboardEvent.preventDefault();
+            upArrow(len); 
+            break;
+
+        case ENTER_KEY: {
+            const parent = searchItemSelected || searchResultsItems;
+            const target = parent.querySelector("a");
+
+            if (target) target.click();
+            break;
+        }
+
+        case ESCAPE_KEY: {
+            searchInput.value = "";
+            searchResults.style.display = "none";
+            searchInput.blur();
+            break;
+        }
     }
 });
 
@@ -50,6 +71,7 @@ function downArrow(len) {
     }
 
     searchItemSelected.focus()
+    searchItemSelected.scrollIntoView({ block: "nearest" });
     addClass(searchItemSelected, "selected");
 }
 
@@ -69,7 +91,8 @@ function upArrow(len) {
             searchItemSelected = searchResultsItems.getElementsByTagName("li")[len];
         }
     }
-    searchItemSelected.focus()
+    searchItemSelected.focus();
+    searchItemSelected.scrollIntoView({ block: "nearest" });
     addClass(searchItemSelected, "selected");
 }
 
@@ -106,14 +129,48 @@ function initSearch() {
 
         return token;
     };
+    
     const index = elasticlunr(function () {
-        this.addField("fnName");
+        this.addField("name");
         this.addField("desc");
-        this.setRef("anchor");
+        this.addField("title");
+        this.addField("content");
+        this.setRef("id");
         elasticlunr.stopWordFilter.stopWords = {};
         elasticlunr.Pipeline.registerFunction(elasticlunr.trimmer, "trimmer");
         elasticlunr.tokenizer.seperator = /[\s~~]+/;
     });
+    
+    // Custom tokenizer to handle symbols with '/'
+    const originalTokenizer = elasticlunr.tokenizer;
+    elasticlunr.tokenizer = function (obj, metadata) {
+        if (obj == null || obj == undefined) {
+            return [];
+        }
+        
+        if (Array.isArray(obj)) {
+            return obj.reduce(function (tokens, token) {
+                return tokens.concat(elasticlunr.tokenizer(token, metadata));
+            }, []);
+        }
+        
+        const str = obj.toString().toLowerCase();
+        const tokens = originalTokenizer(str, metadata);
+        
+        // Add additional tokens for strings containing '/'
+        if (str.includes('/')) {
+            const parts = str.split('/');
+            if (parts.length > 1) {
+                const lastPart = parts[parts.length - 1];
+                if (lastPart) {
+                    tokens.push(lastPart);
+                }
+            }
+        }
+        
+        return tokens;
+    };
+    
     // Load symbols into elasticlunr object
     window.searchIndexApi.forEach(item => index.addDoc(item));
 
@@ -174,20 +231,23 @@ function showResults(index) {
         }
 
         const options = {
-            bool: "AND",
+            bool: "OR",
             fields: {
-                fnName: {boost: 3},
+                name: {boost: 3},
+                title: {boost: 2},
                 desc: {boost: 1},
+                content: {boost: 1}
             },
             expand: true
         };
         const results = index.search(term, options);
         if (results.length === 0) {
             let emptyResult = {
-                fnName: "Symbol not found",
-                fnSignature: "",
+                name: "Symbol not found",
+                signature: "",
                 desc: "Cannot provide any Phel symbol. Try something else",
                 anchor: "#",
+                type: "api"
             };
 
             createMenuItem(emptyResult, null);
@@ -215,11 +275,22 @@ function createMenuItem(result, index) {
 }
 
 function formatSearchResultItem(item) {
-    return `<a href="/documentation/api/#${item.anchor}">`
-        + `<div class="search-results__item">${item.fnName} `
-        + `<small class="fn-signature">${item.fnSignature}</small>`
-        + `<span class="desc">${item.desc}</span>`
-        + `</div></a>`;
+    if (item.type === "documentation") {
+        return `<a href="${item.url}">`
+            + `<div class="search-results__item">`
+            + `<span class="result-type">Documentation: </span>`
+            + `<strong>${item.title}</strong>`
+            + `<span class="desc">${item.content}</span>`
+            + `</div></a>`;
+    } else {
+        return `<a href="/documentation/api/#${item.anchor}">`
+            + `<div class="search-results__item">`
+            + `<span class="result-type">API: </span>`
+            + `${item.name} `
+            + `<small class="fn-signature">${item.signature}</small>`
+            + `<span class="desc">${item.desc}</span>`
+            + `</div></a>`;
+    }
 }
 
 function removeSelectedClassFromSearchResult() {

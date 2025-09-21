@@ -55,6 +55,8 @@ Evaluates `expr` and creates a new PHP class using the arguments. The instance o
 
 Calls a method or property on a PHP object. Both `methodname` and `property` must be symbols and cannot be an evaluated value.
 
+You can chain multiple method calls or property accesses in one `php/->` expression. Each element is evaluated sequentially on the result of the previous call, allowing fluent-style interactions or access to nested properties.
+
 ```phel
 (ns my\module)
 
@@ -62,6 +64,22 @@ Calls a method or property on a PHP object. Both `methodname` and `property` mus
 
 (php/-> di (format "%s seconds")) # Evaluates to "30 seconds"
 (php/-> di s) # Evaluates to 30
+
+# Chain multiple calls: 
+# (new DateTimeImmutable("2024-03-10"))->modify("+1 day")->format("Y-m-d")
+(php/-> (php/new \DateTimeImmutable "2024-03-10")
+        (modify "+1 day")
+        (format "Y-m-d"))
+
+# Mix methods and properties: $user->profile->getDisplayName()
+(php/-> user profile (getDisplayName))
+
+# Other example using nested properties:
+(def address (php/new \stdClass))
+(def user (php/new \stdClass))
+(php/oset (php/-> address city) "Berlin")
+(php/oset (php/-> user address) address)
+(php/-> user address city) # Evaluates to "Berlin"
 ```
 
 ## PHP static method and property call
@@ -112,6 +130,35 @@ Equivalent to PHP's `arr[index] ?? null`.
 (php/aget (php/array "a" "b" "c") 5) # Evaluates to nil
 ```
 
+## Get nested PHP-Array value
+
+```phel
+(php/aget-in arr path)
+```
+
+Resolves nested values in a PHP array using a sequence of keys or indexes. The
+`path` must be a sequential collection such as a vector. If any step in the
+path is missing, `nil` is returned.
+
+```phel
+(def users
+  (php/array
+    "users"
+    (php/array
+      (php/array "name" "Alice")
+      (php/array "name" "Bob"))))
+
+(php/aget-in users ["users" 1 "name"]) # Evaluates to "Bob"
+
+(php/aget-in 
+    (php/array "meta" (php/array "status" "ok")) 
+    ["meta" "status"]) # Evaluates to "ok"
+
+(php/aget-in 
+    (php/array "meta" (php/array "status" "ok")) 
+    ["meta" "missing"]) # Evaluates to nil
+```
+
 ## Set PHP-Array value
 
 ```phel
@@ -119,6 +166,22 @@ Equivalent to PHP's `arr[index] ?? null`.
 ```
 
 Equivalent to PHP's `arr[index] = value`.
+
+## Set nested PHP-Array value
+
+```phel
+(php/aset-in arr path value)
+```
+
+Creates or updates nested entries inside a PHP array. Intermediate arrays are
+created as needed to ensure the path exists before writing the value.
+
+```phel
+(def data (php/array))
+(php/aset-in data ["user" "profile" "name"] "Charlie")
+(php/aget-in data ["user" "profile" "name"]) # Evaluates to "Charlie"
+# Equivalent to $data['user']['profile']['name'] = 'Charlie';
+```
 
 ## Append PHP-Array value
 
@@ -136,13 +199,40 @@ Equivalent to PHP's `arr[] = value`.
 
 Equivalent to PHP's `unset(arr[index])`.
 
-## `__DIR__` and `__FILE__`
-
-In Phel you can also use PHP Magic Methods `__DIR__` and `__FILE__`. These resolve to the dirname or filename of the Phel file.
+## Unset nested PHP-Array value
 
 ```phel
-(println __DIR__) # Prints the directory name of the file
-(println __FILE__) # Prints the filename of the file
+(php/aunset-in arr path)
+```
+
+Removes a nested entry in a PHP array. Once the value is removed, parent arrays
+remain untouched even if they become empty.
+
+```phel
+(def data (php/array "user" (php/array "profile" (php/array "name" "Dora"))))
+(php/aunset-in data ["user" "profile" "name"])
+(php/aget-in data ["user" "profile" "name"]) # Evaluates to nil
+# Equivalent to unset($data['user']['profile']['name']);
+```
+
+## `__DIR__`, `__FILE__`, and `*file*`
+
+In Phel you can also use PHP Magic Methods `__DIR__` and `__FILE__`. When the
+compiler runs, these constants are expanded by PHP and therefore point to the
+generated PHP file that is executed (e.g. the temporary file under
+`.phel/cache`).
+
+Sometimes you need the path of the original Phel source file instead. For that
+Phel exposes the special var `*file*`, which contains the absolute path of the
+current Phel file. Combine it with `php/dirname` if you need the source
+directory.
+
+```phel
+(println __DIR__)  # Directory name of the generated PHP file
+(println __FILE__) # Filename of the generated PHP file
+
+(println (php/dirname *file*)) # Directory of the original Phel file
+(println *file*)               # Absolute path of the original file
 ```
 
 ## Calling Phel functions from PHP
@@ -185,7 +275,11 @@ class MyExistingClass {
   use PhelCallerTrait;
 
   public function myExistingMethod(...$arguments) {
-    return $this->callPhel('my\phel\namespace', 'phel-function-name', ...$arguments);
+    return $this->callPhel(
+        'my\phel\namespace', 
+        'phel-function-name', 
+        ...$arguments
+    );
   }
 }
 ```

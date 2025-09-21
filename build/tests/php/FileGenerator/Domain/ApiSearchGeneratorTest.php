@@ -17,8 +17,8 @@ final class ApiSearchGeneratorTest extends TestCase
         $apiFacade->method('getPhelFunctions')
             ->willReturn([
                 PhelFunction::fromArray([
-                    'fnName' => 'table?',
-                    'fnSignature' => '(table? x)',
+                    'name' => 'table?',
+                    'signature' => '(table? x)',
                     'desc' => 'doc for table?',
                     'groupKey' => 'table'
                 ]),
@@ -29,14 +29,20 @@ final class ApiSearchGeneratorTest extends TestCase
 
         $expected = [
             [
-                'fnName' => 'table?',
-                'fnSignature' => '(table? x)',
+                'id' => 'api_table?',
+                'name' => 'table?',
+                'signature' => '(table? x)',
                 'desc' => 'doc for table?',
                 'anchor' => 'table',
+                'type' => 'api',
             ],
         ];
 
-        self::assertEquals($expected, $actual);
+        // Filter out documentation items for this test
+        $apiItems = array_filter($actual, fn($item) => $item['type'] === 'api');
+        $apiItems = array_values($apiItems); // Re-index array
+
+        self::assertEquals($expected, $apiItems);
     }
 
     public function test_multiple_items_in_different_groups(): void
@@ -45,14 +51,14 @@ final class ApiSearchGeneratorTest extends TestCase
         $apiFacade->method('getPhelFunctions')
             ->willReturn([
                 PhelFunction::fromArray([
-                    'fnName' => 'table',
-                    'fnSignature' => '(table & xs)',
+                    'name' => 'table',
+                    'signature' => '(table & xs)',
                     'desc' => 'doc for table',
                     'groupKey' => 'table',
                 ]),
                 PhelFunction::fromArray([
-                    'fnName' => 'not',
-                    'fnSignature' => '(not x)',
+                    'name' => 'not',
+                    'signature' => '(not x)',
                     'desc' => 'doc for not',
                     'groupKey' => 'not',
                 ]),
@@ -63,20 +69,28 @@ final class ApiSearchGeneratorTest extends TestCase
 
         $expected = [
             [
-                'fnName' => 'table',
-                'fnSignature' => '(table & xs)',
+                'id' => 'api_table',
+                'name' => 'table',
+                'signature' => '(table & xs)',
                 'desc' => 'doc for table',
                 'anchor' => 'table',
+                'type' => 'api',
             ],
             [
-                'fnName' => 'not',
-                'fnSignature' => '(not x)',
+                'id' => 'api_not',
+                'name' => 'not',
+                'signature' => '(not x)',
                 'desc' => 'doc for not',
                 'anchor' => 'not',
+                'type' => 'api',
             ],
         ];
 
-        self::assertEquals($expected, $actual);
+        // Filter out documentation items for this test
+        $apiItems = array_filter($actual, fn($item) => $item['type'] === 'api');
+        $apiItems = array_values($apiItems); // Re-index array
+
+        self::assertEquals($expected, $apiItems);
     }
 
     public function test_multiple_items_in_the_same_group(): void
@@ -85,14 +99,14 @@ final class ApiSearchGeneratorTest extends TestCase
         $apiFacade->method('getPhelFunctions')
             ->willReturn([
                 PhelFunction::fromArray([
-                    'fnName' => 'table',
-                    'fnSignature' => '(table & xs)',
+                    'name' => 'table',
+                    'signature' => '(table & xs)',
                     'desc' => 'doc for table',
                     'groupKey' => 'table',
                 ]),
                 PhelFunction::fromArray([
-                    'fnName' => 'table?',
-                    'fnSignature' => '(table? x)',
+                    'name' => 'table?',
+                    'signature' => '(table? x)',
                     'desc' => 'doc for table?',
                     'groupKey' => 'table',
                 ]),
@@ -103,20 +117,28 @@ final class ApiSearchGeneratorTest extends TestCase
 
         $expected = [
             [
-                'fnName' => 'table',
-                'fnSignature' => '(table & xs)',
+                'id' => 'api_table',
+                'name' => 'table',
+                'signature' => '(table & xs)',
                 'desc' => 'doc for table',
                 'anchor' => 'table',
+                'type' => 'api',
             ],
             [
-                'fnName' => 'table?',
-                'fnSignature' => '(table? x)',
+                'id' => 'api_table?',
+                'name' => 'table?',
+                'signature' => '(table? x)',
                 'desc' => 'doc for table?',
                 'anchor' => 'table-1',
+                'type' => 'api',
             ],
         ];
 
-        self::assertEquals($expected, $actual);
+        // Filter out documentation items for this test
+        $apiItems = array_filter($actual, fn($item) => $item['type'] === 'api');
+        $apiItems = array_values($apiItems); // Re-index array
+
+        self::assertEquals($expected, $apiItems);
     }
 
     public function test_fn_name_with_slash_in_the_middle(): void
@@ -125,14 +147,14 @@ final class ApiSearchGeneratorTest extends TestCase
         $apiFacade->method('getPhelFunctions')
             ->willReturn([
                 PhelFunction::fromArray([
-                    'fnName' => 'http/response',
-                    'fnSignature' => '',
+                    'name' => 'http/response',
+                    'signature' => '',
                     'desc' => '',
                     'groupKey' => 'http-response',
                 ]),
                 PhelFunction::fromArray([
-                    'fnName' => 'http/response?',
-                    'fnSignature' => '',
+                    'name' => 'http/response?',
+                    'signature' => '',
                     'desc' => '',
                     'groupKey' => 'http-response-1',
                 ]),
@@ -143,20 +165,28 @@ final class ApiSearchGeneratorTest extends TestCase
 
         $expected = [
             [
-                'fnName' => 'http/response',
-                'fnSignature' => '',
+                'id' => 'api_http/response',
+                'name' => 'http/response',
+                'signature' => '',
                 'desc' => '',
                 'anchor' => 'http-response',
+                'type' => 'api',
             ],
             [
-                'fnName' => 'http/response?',
-                'fnSignature' => '',
+                'id' => 'api_http/response?',
+                'name' => 'http/response?',
+                'signature' => '',
                 'desc' => '',
                 'anchor' => 'http-response-1',
+                'type' => 'api',
             ],
         ];
 
-        self::assertEquals($expected, $actual);
+        // Filter out documentation items for this test
+        $apiItems = array_filter($actual, fn($item) => $item['type'] === 'api');
+        $apiItems = array_values($apiItems); // Re-index array
+
+        self::assertEquals($expected, $apiItems);
     }
 
     public function test_fn_name_ending_with_minus(): void
@@ -165,14 +195,14 @@ final class ApiSearchGeneratorTest extends TestCase
         $apiFacade->method('getPhelFunctions')
             ->willReturn([
                 PhelFunction::fromArray([
-                    'fnName' => 'defn',
-                    'fnSignature' => '',
+                    'name' => 'defn',
+                    'signature' => '',
                     'desc' => '',
                     'groupKey' => 'defn',
                 ]),
                 PhelFunction::fromArray([
-                    'fnName' => 'defn-',
-                    'fnSignature' => '',
+                    'name' => 'defn-',
+                    'signature' => '',
                     'desc' => '',
                     'groupKey' => 'defn',
                 ]),
@@ -183,20 +213,28 @@ final class ApiSearchGeneratorTest extends TestCase
 
         $expected = [
             [
-                'fnName' => 'defn',
-                'fnSignature' => '',
+                'id' => 'api_defn',
+                'name' => 'defn',
+                'signature' => '',
                 'desc' => '',
                 'anchor' => 'defn',
+                'type' => 'api',
             ],
             [
-                'fnName' => 'defn-',
-                'fnSignature' => '',
+                'id' => 'api_defn-',
+                'name' => 'defn-',
+                'signature' => '',
                 'desc' => '',
                 'anchor' => 'defn-1',
+                'type' => 'api',
             ],
         ];
 
-        self::assertEquals($expected, $actual);
+        // Filter out documentation items for this test
+        $apiItems = array_filter($actual, fn($item) => $item['type'] === 'api');
+        $apiItems = array_values($apiItems); // Re-index array
+
+        self::assertEquals($expected, $apiItems);
     }
 
     public function test_fn_name_with_upper_case(): void
@@ -205,14 +243,14 @@ final class ApiSearchGeneratorTest extends TestCase
         $apiFacade->method('getPhelFunctions')
             ->willReturn([
                 PhelFunction::fromArray([
-                    'fnName' => 'NAN',
-                    'fnSignature' => '',
+                    'name' => 'NAN',
+                    'signature' => '',
                     'desc' => '',
                     'groupKey' => 'nan',
                 ]),
                 PhelFunction::fromArray([
-                    'fnName' => 'nan?',
-                    'fnSignature' => '',
+                    'name' => 'nan?',
+                    'signature' => '',
                     'desc' => '',
                     'groupKey' => 'nan',
                 ]),
@@ -223,19 +261,27 @@ final class ApiSearchGeneratorTest extends TestCase
 
         $expected = [
             [
-                'fnName' => 'NAN',
-                'fnSignature' => '',
+                'id' => 'api_NAN',
+                'name' => 'NAN',
+                'signature' => '',
                 'desc' => '',
                 'anchor' => 'nan',
+                'type' => 'api',
             ],
             [
-                'fnName' => 'nan?',
-                'fnSignature' => '',
+                'id' => 'api_nan?',
+                'name' => 'nan?',
+                'signature' => '',
                 'desc' => '',
                 'anchor' => 'nan-1',
+                'type' => 'api',
             ],
         ];
 
-        self::assertEquals($expected, $actual);
+        // Filter out documentation items for this test
+        $apiItems = array_filter($actual, fn($item) => $item['type'] === 'api');
+        $apiItems = array_values($apiItems); // Re-index array
+
+        self::assertEquals($expected, $apiItems);
     }
 }

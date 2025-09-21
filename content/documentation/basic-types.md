@@ -111,7 +111,7 @@ A list will be interpreted as a function call, a macro call or a special form by
 A vector is a sequence of whitespace-separated values surrounded by brackets.
 
 ```phel
-[1 2 3]
+[1 2 3] # same as (vector 1 2 3)
 ```
 
 A vector in Phel is an indexed data structure. In contrast to PHP arrays, Phel vectors cannot be used as maps, hashtables or dictionaries.
@@ -121,7 +121,7 @@ A vector in Phel is an indexed data structure. In contrast to PHP arrays, Phel v
 A map is a sequence of whitespace-separated key/value pairs surrounded by curly braces, wherein the key and value of each key/value pair are separated by whitespace. There must be an even number of items between curly braces or the parser will signal a parse error. The sequence is defined as key1, value1, key2, value2, etc.
 
 ```phel
-{}
+{} # same as (hash-map)
 {:key1 "value1" :key2 "value2"}
 {'(1 2 3) '(4 5 6)}
 {[] []}
@@ -135,13 +135,34 @@ In contrast to PHP associative arrays, Phel maps can have any types of keys.
 A set is a sequence of whitespace-separated values prefixed by the function `set` and the whole being surrounded by parentheses.
 
 ```phel
-(set 1 2 3)
+#{1 2 3} # same as (set 1 2 3)
 ```
 
 ## Comments
 
-A comment begins with a `#` character and continues until the end of the line. There are no multi-line comments.
+A comment begins with a `#` or `;` character and continues until the end of the line.
 
 ```phel
 # This is a comment
+; This is also a comment
 ```
+
+Phel also supports multiline comments using the Common Lisp `#|` ... `|#` syntax. The comment spans everything between the opening and closing markers, including line breaks.
+
+```phel
+#|
+This whole block
+is a comment
+|#
+```
+
+Phel also supports inline s-expression commenting with `#_` which comments out the next form. It can also be stacked to comment out two or more forms after it.
+
+```phel
+[:one :two :three]     # results to [:one :two :three]
+[#_:one :two :three]   # results to [:two :three]
+[#_:one :two #_:three] # results to [:two]
+[#_#_:one :two :three] # results to [:three]
+```
+
+See also the [comment](/documentation/api/#comment) macro which ignores the forms inside and returns `nil` while still requiring the content to be valid Phel code.
