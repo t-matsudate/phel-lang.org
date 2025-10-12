@@ -13,18 +13,18 @@
     {{page.content | safe}}
 
     <div class="related-container">
-      {% if page.earlier %}
-      <div class="link link-previous">
-        <span>&larr;</span>
-        <a href="{{ page.earlier.permalink }}">{{ page.earlier.title }}</a>
-      </div>
+      {% if page.lower %}
+      <a href="{{ page.lower.permalink }}" class="btn btn-secondary link link--previous">
+        <span>←</span>
+        <span class="link__title">{{ page.lower.title }}</span>
+      </a>
       {% endif %}
 
-      {% if page.later %}
-      <div class="link link-next">
-        <a href="{{ page.later.permalink }}">{{ page.later.title }}</a>
-        <span>&rarr;</span>
-      </div>
+      {% if page.higher %}
+      <a href="{{ page.higher.permalink }}" class="btn btn-secondary link link--next">
+        <span class="link__title">{{ page.higher.title }}</span>
+        <span>→</span>
+      </a>
       {% endif %}
     </div>
   </div>

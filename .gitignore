@@ -1,10 +1,23 @@
 .idea/
 .vscode/
 .cache/
+.claude/
+
 public/
 vendor/
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+.DS_Store
+Thumbs.db
 
 .phel-repl-history
 .phpunit.result.cache
 static/api_search.js
 content/documentation/api.md
+/static/tailwind.css
+/css/tailwind.entry.css
+/static/syntax-theme-dark.css
+/static/syntax-theme-light.css

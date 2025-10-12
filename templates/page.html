@@ -5,11 +5,12 @@
     <meta property="og:title" content="{{ page.title }} | {{ config.title }}" />
 {% endblock meta_content %}
 
+{% block sidebar_extra %}
+    {% include "page/table-of-content.html" %}
+{% endblock sidebar_extra %}
+
 {% block content %}
     <h1>{{page.title}}</h1>
-    <aside>
-        {% include "page/table-of-content.html" %}
-    </aside>
     <div class="flex-container">
         <div class="page-content">
             {{page.content | safe}}
@@ -20,6 +21,6 @@
 {% block editable %}
 <span class="found-a-typo">
   {% set url = config.extra.repo_content_url ~ page.relative_path %}
-  <a href="{{url}}">Edit me</a>
+  <a href="{{url}}" target="_blank" rel="noopener noreferrer">Edit me</a>
 </span>
 {% endblock editable %}

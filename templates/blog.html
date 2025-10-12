@@ -6,7 +6,7 @@
 {% endblock meta_content %}
 {% block content %}
 <h1>Blog</h1>
-<p>Find the newest information about Phel in our Blog. Subscribe the <a href="{{ get_url(path="atom.xml", trailing_slash=false) }}">Atom/RSS feed</a> if you never want to miss a new entry.</p>
+<p class="blog-intro">Find the newest information about Phel in our Blog.</p>
 <ul class="post-list">
     {% for page in paginator.pages %}
     <li>
@@ -16,11 +16,11 @@
     {% endfor %}
 </ul>
 <div class="pagination">
-    {% if paginator.previous %}
-        <a class="previous" href="{{ paginator.previous }}">‹ Newer posts</a>
-    {% endif %}
-    {% if paginator.next %}
-        <a class="next" href="{{ paginator.next }}">Older posts ›</a>
-    {% endif %}
+      {% if paginator.previous %}
+        <a class="btn btn-secondary pagination__btn pagination__btn--previous" href="{{ paginator.previous }}">← Newer posts</a>
+      {% endif %}
+      {% if paginator.next %}
+        <a class="btn btn-secondary pagination__btn pagination__btn--next" href="{{ paginator.next }}">Older posts →</a>
+      {% endif %}
 </div>
 {% endblock content %}

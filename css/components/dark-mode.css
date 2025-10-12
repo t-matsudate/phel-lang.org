@@ -1,0 +1,163 @@
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: var(--color-dark-bg);
+    --color-text-primary: var(--color-dark-text-primary);
+    --color-text-secondary: var(--color-dark-text-secondary);
+    --color-border: var(--color-dark-border);
+  }
+}
+
+/* Dark mode class-based styling */
+.dark {
+  --color-bg: var(--color-dark-bg);
+  --color-text-primary: var(--color-dark-text-primary);
+  --color-text-secondary: var(--color-dark-text-secondary);
+  --color-border: var(--color-dark-border);
+  background-color: var(--color-dark-bg);
+}
+
+/* Body and root elements */
+.dark body {
+  background-color: var(--color-dark-bg);
+  color: var(--color-dark-text-primary);
+}
+
+.dark html,
+.dark :root {
+  background-color: var(--color-dark-bg);
+}
+
+.dark .layout-container {
+  background-color: var(--color-dark-bg);
+}
+
+/* Dark typography */
+.dark h1,
+.dark h2,
+.dark h3,
+.dark h4,
+.dark h5,
+.dark h6 {
+  color: var(--color-dark-text-primary);
+}
+
+.dark p {
+  color: var(--color-dark-text-secondary);
+}
+
+.dark a {
+  color: var(--color-dark-text-accent);
+}
+
+.dark a:hover {
+  color: var(--color-dark-text-accent);
+}
+
+.dark a:not([class])::after {
+  background: var(--color-dark-text-accent);
+}
+
+/* Dark lists */
+.dark ul li::before {
+  background: var(--color-dark-text-accent);
+}
+
+.dark ol li:before {
+  color: var(--color-dark-text-accent);
+}
+
+/* Dark images */
+.dark img {
+  opacity: 1;
+}
+
+/* Make homepage logo white in dark mode */
+.dark img[src*="logo_phel.svg"] {
+  filter: brightness(0) invert(1);
+}
+
+/* Dark blockquote */
+.dark blockquote {
+  background: var(--color-dark-blockquote-bg);
+  border-left-color: var(--color-dark-blockquote-border);
+  color: var(--color-dark-text-secondary);
+  box-shadow: var(--shadow-dark-sm);
+}
+
+.dark blockquote::before {
+  color: var(--color-dark-blockquote-border);
+}
+
+/* Dark code blocks */
+.dark pre {
+  background: var(--color-dark-code-bg);
+  border-color: var(--color-dark-border);
+  box-shadow: var(--shadow-dark-sm);
+}
+
+.dark pre::-webkit-scrollbar-thumb {
+  background: var(--color-dark-border);
+}
+
+.dark pre::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gray-base);
+}
+
+/* Dark inline code */
+.dark p code,
+.dark li code {
+  background-color: var(--color-dark-code-inline-bg);
+  color: var(--color-dark-text-accent);
+  border-color: var(--color-dark-border);
+}
+
+/* Dark tables */
+.dark table {
+  box-shadow: var(--shadow-dark-sm);
+}
+
+.dark th {
+  background: var(--color-dark-bg-secondary);
+  color: var(--color-dark-text-primary);
+  border-bottom-color: var(--color-dark-text-accent);
+}
+
+.dark td {
+  border-bottom-color: var(--color-dark-border);
+}
+
+.dark tr:hover {
+  background: var(--color-dark-surface-hover);
+}
+
+/* Dark HR */
+.dark hr {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-dark-border) 20%,
+    var(--color-dark-border) 80%,
+    transparent
+  );
+}
+
+/* Dark layout components */
+.dark .one-column-layout,
+.dark .two-column-layout {
+  background: transparent;
+}
+
+/* Dark focus states */
+.dark a:focus-visible,
+.dark button:focus-visible {
+  outline-color: var(--color-dark-text-accent);
+}
+
+/* Dark selection */
+.dark ::selection {
+  background: rgba(191, 164, 255, 0.3);
+}
+
+.dark ::-moz-selection {
+  background: rgba(191, 164, 255, 0.3);
+}

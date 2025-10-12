@@ -5,18 +5,22 @@ title = "The Phel Language"
 description = "The official website of the Phel language. Phel is a functional programming language that compiles to PHP"
 
 # Whether to automatically compile all Sass files in the sass directory
-compile_sass = true
+compile_sass = false
 
 # Whether to build a search index to be used later on by a JavaScript library
 build_search_index = false
 
-generate_feeds = true
+generate_feeds = false
 
 [markdown]
 # Whether to do syntax highlighting
 # Theme can be customised by setting the `highlight_theme` variable to a theme supported by Zola
 highlight_code = true
-highlight_theme = "Tomorrow"
+highlight_theme = "css"
+highlight_themes_css = [
+    { theme = "base16-ocean-dark", filename = "syntax-theme-dark.css" },
+    { theme = "base16-ocean-light", filename = "syntax-theme-light.css" },
+]
 extra_syntaxes = ["syntaxes"]
 extra_syntaxes_and_themes = ["syntaxes"]
 
@@ -24,4 +28,5 @@ extra_syntaxes_and_themes = ["syntaxes"]
 # Put all your custom variables here
 
 repo_content_url = "https://github.com/phel-lang/phel-lang.org/blob/master/content/"
+phel_version = "v0.23.1"
 

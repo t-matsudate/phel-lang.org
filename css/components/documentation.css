@@ -1,0 +1,76 @@
+/* Documentation Navigation */
+.docs-nav {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.docs-nav li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.docs-nav li::before {
+  display: none;
+}
+
+/* Documentation Content */
+.documentation-content {
+  max-width: 100%;
+}
+
+.documentation-content h1 {
+  font-size: var(--text-3xl);
+  margin-bottom: var(--space-xl);
+}
+
+.documentation-content h2 {
+  font-size: var(--text-2xl);
+  margin-top: var(--space-2xl);
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-sm);
+  border-bottom: 2px solid var(--color-light-border);
+}
+
+.documentation-content h3 {
+  font-size: var(--text-xl);
+  margin-top: var(--space-xl);
+  margin-bottom: var(--space-md);
+}
+
+/* Anchor Links */
+.zola-anchor {
+  margin-left: var(--space-sm);
+  opacity: 0;
+  color: var(--color-light-anchor);
+  text-decoration: none;
+  font-weight: 400;
+  transition: opacity var(--duration-fast) var(--ease-out);
+}
+
+h1:hover .zola-anchor,
+h2:hover .zola-anchor,
+h3:hover .zola-anchor,
+h4:hover .zola-anchor,
+h5:hover .zola-anchor,
+h6:hover .zola-anchor {
+  opacity: 1;
+}
+
+.zola-anchor:hover {
+  color: var(--color-light-link);
+}
+
+/* ========================================
+   DARK MODE
+   ======================================== */
+
+.dark .documentation-content h2 {
+  border-bottom-color: var(--color-dark-border);
+}
+
+.dark .zola-anchor,
+.dark .zola-anchor:hover {
+  color: var(--color-dark-anchor);
+}

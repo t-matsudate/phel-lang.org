@@ -1,0 +1,98 @@
+.blog-intro {
+  font-size: var(--text-lg);
+  color: var(--color-light-text-secondary);
+  margin-bottom: var(--space-2xl);
+}
+
+.post-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.post-list li {
+  list-style: none;
+  padding: 0;
+  margin: 25px 0;
+}
+
+.post-list li::before {
+  display: none;
+}
+
+.blog-entry .meta {
+  color: var(--color-gray-light);
+}
+
+.post-list li a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--color-light-link);
+  transition: width var(--duration-normal) var(--ease-out);
+}
+
+.post-list li a:hover::after {
+  width: 100%;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-md);
+  margin: var(--space-3xl) 0;
+}
+
+.pagination .btn {
+  color: var(--color-light-link);
+}
+
+.pagination__btn--previous {
+  margin-right: auto;
+}
+
+.pagination__btn--next {
+  margin-left: auto;
+}
+
+/* ========================================
+   DARK MODE
+   ======================================== */
+
+.dark .blog-intro {
+  color: var(--color-dark-text-secondary);
+}
+
+.dark .post-list li a {
+  border-bottom-color: var(--color-dark-border);
+}
+
+.dark .post-list li a::after {
+  background: var(--color-dark-text-accent);
+}
+
+.dark .post-list li a h2 {
+  color: var(--color-dark-text-primary);
+}
+
+.dark .post-list li a:hover h2 {
+  color: var(--color-dark-text-accent);
+}
+
+.dark .post-list li a .meta {
+  color: var(--color-dark-text-muted);
+}
+
+.dark .post-list li a .excerpt {
+  color: var(--color-dark-text-secondary);
+}
+
+/* Pagination dark mode - inherit from .btn-secondary, add link color */
+.dark .pagination .btn {
+  color: var(--color-dark-text-accent);
+}
