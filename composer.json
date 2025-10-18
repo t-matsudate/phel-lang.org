@@ -21,12 +21,12 @@
     },
     "autoload": {
         "psr-4": {
-            "PhelWeb\\": "build/src/php/"
+            "PhelWeb\\": "build/src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "PhelWebTests\\": "build/tests/php"
+            "PhelWebTests\\": "build/tests"
         }
     },
     "minimum-stability": "dev",
@@ -39,7 +39,8 @@
     "scripts": {
         "build": [
             "php build/api-page.php",
-            "php build/api-search.php"
+            "php build/api-search.php",
+            "php build/generate-releases.php"
         ],
         "test": "./vendor/bin/phpunit",
         "post-install-cmd": [
