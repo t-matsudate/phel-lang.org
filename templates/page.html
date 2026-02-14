@@ -1,13 +1,16 @@
 {% extends "layouts/two-column-layout.html" %}
+{% import "macros.html" as macros %}
 
 {% block meta_content %}
     <title>{{ page.title }} | {{ config.title }}</title>
     <meta property="og:title" content="{{ page.title }} | {{ config.title }}" />
 {% endblock meta_content %}
 
-{% block sidebar_extra %}
-    {% include "page/table-of-content.html" %}
-{% endblock sidebar_extra %}
+{% block sidebar_extra %}{% endblock sidebar_extra %}
+
+{% block floating_toc %}
+{{ macros::floating_toc(items=page.toc) }}
+{% endblock floating_toc %}
 
 {% block content %}
     <h1>{{page.title}}</h1>
@@ -17,6 +20,25 @@
         </div>
     </div>
 {% endblock content %}
+
+{% block navigation %}
+{% if page.lower or page.higher %}
+<div class="page-navigation">
+  {% if page.lower %}
+  <a href="{{ page.lower.path }}" class="btn btn-secondary">
+    <span>&larr; Previous</span>
+    <span>{{ page.lower.title }}</span>
+  </a>
+  {% endif %}
+  {% if page.higher %}
+  <a href="{{ page.higher.path }}" class="btn btn-secondary">
+    <span>{{ page.higher.title }}</span>
+    <span>Next &rarr;</span>
+  </a>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock navigation %}
 
 {% block editable %}
 <div class="edit-page-link">
